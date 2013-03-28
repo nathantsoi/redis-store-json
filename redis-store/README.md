@@ -15,6 +15,42 @@ If you are using redis-store with Rails, consider using the [redis-rails gem](ht
 
 If you are on **Snow Leopard** you have to run `env ARCHFLAGS="-arch x86_64" ruby ci/run.rb`
 
+## Configuring Redis Store
+
+### Changing storage strategies
+
+Several months ago Matt Huggins (https://github.com/mhuggins) introduced a change to the redis-store gem to decouple how it marshals data into the redis database. Normally, data is marshalled using Ruby's Marshal class. This strategy is fine when access to the data is only given to Ruby-based application but not for any other kind of application unless it has implemented its own Ruby Marshal parser. With this change, a more universal marshal strategy can be applied like JSON. There are caveats to using different strategies such as JSON not serializing Ruby objects properly so make sure that you are using the strategy that fits your needs.
+
+Example usage:
+
+# each of the following will create a new redis store object that uses the new Marshal adapter
+Redis::Store.new
+Redis::Store.new(:adapter => :marshal)  # symbol shorthand
+Redis::Store.new(:adapter => Redis::Store::Strategy::Marshal)  # actual class
+Redis::Store.new(:adapter => "Redis::Store::Strategy::Marshal")  # string name representing class
+
+# each of the following will create a new redis store object that uses the new Json adapter
+Redis::Store.new(:adapter => :json)   # symbol shorthand
+Redis::Store.new(:adapter => Redis::Store::Strategy::Json)  # actual class
+Redis::Store.new(:adapter => "Redis::Store::Strategy::Json")  # string name representing class
+
+
+Creating a strategy:
+
+A new strategy simply has to be able to perform two methods: _dump and _load.
+
+module RedisYamlAdapter
+  def self._dump(object)
+    ::YAML.dump(object)
+  end
+
+  def self._load(string)
+    ::YAML.load(string)
+  end
+end
+
+Redis::Store.new(:adapter => RedisYamlAdapter)
+
 ## Copyright
 
 (c) 2009 - 2011 Luca Guidi - [http://lucaguidi.com](http://lucaguidi.com), released under the MIT license
