@@ -24,6 +24,7 @@ Several months ago Matt Huggins (https://github.com/mhuggins) introduced a chang
 Example usage:
 
 Each of the following will create a new redis store object that uses the new Marshal adapter
+
     Redis::Store.new
     Redis::Store.new(:adapter => :marshal)  # symbol shorthand
     Redis::Store.new(:adapter => Redis::Store::Strategy::Marshal)  # actual class
