@@ -23,33 +23,33 @@ Several months ago Matt Huggins (https://github.com/mhuggins) introduced a chang
 
 Example usage:
 
-# each of the following will create a new redis store object that uses the new Marshal adapter
-Redis::Store.new
-Redis::Store.new(:adapter => :marshal)  # symbol shorthand
-Redis::Store.new(:adapter => Redis::Store::Strategy::Marshal)  # actual class
-Redis::Store.new(:adapter => "Redis::Store::Strategy::Marshal")  # string name representing class
+Each of the following will create a new redis store object that uses the new Marshal adapter
+    Redis::Store.new
+    Redis::Store.new(:adapter => :marshal)  # symbol shorthand
+    Redis::Store.new(:adapter => Redis::Store::Strategy::Marshal)  # actual class
+    Redis::Store.new(:adapter => "Redis::Store::Strategy::Marshal")  # string name representing class
 
-# each of the following will create a new redis store object that uses the new Json adapter
-Redis::Store.new(:adapter => :json)   # symbol shorthand
-Redis::Store.new(:adapter => Redis::Store::Strategy::Json)  # actual class
-Redis::Store.new(:adapter => "Redis::Store::Strategy::Json")  # string name representing class
+Each of the following will create a new redis store object that uses the new Json adapter
 
+    Redis::Store.new(:adapter => :json)   # symbol shorthand
+    Redis::Store.new(:adapter => Redis::Store::Strategy::Json)  # actual class
+    Redis::Store.new(:adapter => "Redis::Store::Strategy::Json")  # string name representing class
 
 Creating a strategy:
 
 A new strategy simply has to be able to perform two methods: _dump and _load.
 
-module RedisYamlAdapter
-  def self._dump(object)
-    ::YAML.dump(object)
-  end
+    module RedisYamlAdapter
+      def self._dump(object)
+        ::YAML.dump(object)
+      end
 
-  def self._load(string)
-    ::YAML.load(string)
-  end
-end
+      def self._load(string)
+        ::YAML.load(string)
+      end
+    end
 
-Redis::Store.new(:adapter => RedisYamlAdapter)
+    Redis::Store.new(:adapter => RedisYamlAdapter)
 
 ## Copyright
 
