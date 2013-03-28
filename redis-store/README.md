@@ -26,15 +26,15 @@ Example usage:
 Each of the following will create a new redis store object that uses the new Marshal adapter
 
     Redis::Store.new
-    Redis::Store.new(:adapter => :marshal)  # symbol shorthand
-    Redis::Store.new(:adapter => Redis::Store::Strategy::Marshal)  # actual class
-    Redis::Store.new(:adapter => "Redis::Store::Strategy::Marshal")  # string name representing class
+    Redis::Store.new(:strategy => :marshal)  # symbol shorthand
+    Redis::Store.new(:strategy => Redis::Store::Strategy::Marshal)  # actual class
+    Redis::Store.new(:strategy => "Redis::Store::Strategy::Marshal")  # string name representing class
 
 Each of the following will create a new redis store object that uses the new Json adapter
 
-    Redis::Store.new(:adapter => :json)   # symbol shorthand
-    Redis::Store.new(:adapter => Redis::Store::Strategy::Json)  # actual class
-    Redis::Store.new(:adapter => "Redis::Store::Strategy::Json")  # string name representing class
+    Redis::Store.new(:strategy => :json)   # symbol shorthand
+    Redis::Store.new(:strategy => Redis::Store::Strategy::Json)  # actual class
+    Redis::Store.new(:strategy => "Redis::Store::Strategy::Json")  # string name representing class
 
 Creating a strategy:
 
