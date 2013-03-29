@@ -1,4 +1,5 @@
 require 'redis/store/strategy/json'
+require 'redis/store/strategy/json_session'
 require 'redis/store/strategy/marshal'
 require 'redis/store/strategy/yaml'
 

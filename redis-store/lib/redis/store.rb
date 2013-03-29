@@ -7,9 +7,10 @@ class Redis
     include Ttl, Interface
 
     STRATEGIES = {
-      :marshal => Strategy::Marshal,
-      :json    => Strategy::Json,
-      :yaml    => Strategy::Yaml,
+      :marshal      => Strategy::Marshal,
+      :json         => Strategy::Json,
+      :json_session => Strategy::JsonSession,
+      :yaml         => Strategy::Yaml,
     }.freeze
 
     def initialize(options = { })
