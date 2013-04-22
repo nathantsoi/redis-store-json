@@ -1,5 +1,13 @@
 require 'test_helper'
 
+# For faking rails flash objects retrieved from session
+module FakeActionDispatch
+  class Flash
+    class FlashHash < Hash
+    end
+  end
+end
+
 describe "Redis::Store::Strategy::JsonSession" do
   def setup
     @marshal_store = Redis::Store.new :strategy => :marshal
@@ -56,13 +64,6 @@ describe "Redis::Store::Strategy::JsonSession" do
     @store.get("rabbit2", :raw => true).must_equal(%({:name=>"Peter Cottontail", :race=>#{race.inspect}}))
   end
 
-  it "marshals on set expire" do
-    @store.setex "rabbit2", 1, @peter
-    @store.get("rabbit2").must_equal(@peter)
-    sleep 2
-    @store.get("rabbit2").must_be_nil
-  end
-
   it "doesn't unmarshal on multi get" do
     @store.set "rabbit2", @peter
     rabbit, rabbit2 = @store.mget "rabbit", "rabbit2"
@@ -91,10 +92,49 @@ describe "Redis::Store::Strategy::JsonSession" do
     rabbit.must_equal(@peter)
   end
 
+  it "can set a Set object" do
+    @store.set "set_object", Set.new([1,2])
+    set_object = @store.get("set_object")
+    set_object.must_equal([1,2])
+  end
+
+  describe "flash key value" do
+
+    before do
+      @flash_value = {:show_login => true }
+      @flash_data = {:flash => @flash_value}
+    end
+
+    describe "when ActionDispatch is available" do
+
+      before do
+        ActionDispatch = FakeActionDispatch
+        @store.class.send(:include, ActionDispatch)
+      end
+
+      it "returns a flash object instead of a hash" do
+        @store.set "flash", @flash_data
+        flash_store = @store.get "flash"
+        flash_hash = flash_store[:flash]
+        flash_hash.class.must_equal(FakeActionDispatch::Flash::FlashHash)
+        flash_hash.must_equal(@flash_value)
+      end
+
+    end
+
+    it "returns a hash" do
+      @store.set "flash", @flash_data
+      flash = @store.get "flash"
+      flash.must_equal(@flash_data)
+    end
+
+  end
+
   describe "binary safety" do
     before do
       @utf8_key = [51339].pack("U*")
       @ascii_string = [128].pack("C*")
+      @ascii_rabbit = {:name => "rabbit", :legs => 4, :ascii_string => @ascii_string}
     end
 
     it "gets and sets raw values" do
@@ -102,10 +142,14 @@ describe "Redis::Store::Strategy::JsonSession" do
       @store.get(@utf8_key, :raw => true).bytes.to_a.must_equal(@ascii_string.bytes.to_a)
     end
 
-    it "marshals objects on setnx"
-      # @store.del(@utf8_key)
-      # @store.setnx(@utf8_key, @ascii_rabbit)
-      # @store.get(@utf8_key).must_equal(@ascii_rabbit)
+    it "marshals objects on setnx" do
+      @store.del(@utf8_key)
+      @store.setnx(@utf8_key, @ascii_rabbit)
+      retrievied_ascii_rabbit = @store.get(@utf8_key)
+      JSON.load(JSON.generate(retrievied_ascii_rabbit.delete(:ascii_string))).must_equal(@ascii_string)
+      @ascii_rabbit.delete(:ascii_string)
+      retrievied_ascii_rabbit.must_equal(@ascii_rabbit)
+    end
 
     it "gets and sets raw values on setnx" do
       @store.del(@utf8_key)
