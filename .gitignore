@@ -4,6 +4,7 @@
 *-redis-store.gemspec
 tags
 bin/
+.bin/
 coverage/
 pkg/
 vendor/
