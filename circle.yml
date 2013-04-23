@@ -1,0 +1,6 @@
+test:
+  pre:
+    - redis-server $HOME/redis-store/redis-store/test/config/node-one.conf
+    - redis-server $HOME/redis-store/redis-store/test/config/node-two.conf
+  override:
+    - ruby ci/run.rb
