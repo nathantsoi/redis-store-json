@@ -48,16 +48,21 @@ class Redis
             when *SERIALIZABLE
               object
             else
-              raise SerializationError.new(object)
+              if is_flash_hash?(object)
+                object
+              else
+                raise SerializationError.new(object)
+              end
             end
           end
 
+          def is_flash_hash?(object)
+            defined?(ActionDispatch::Flash::FlashHash) &&
+              object.kind_of?(ActionDispatch::Flash::FlashHash)
+          end
+
           def marshal_hash(object)
-            if defined?(ActionDispatch::Flash::FlashHash) && object.kind_of?(ActionDispatch::Flash::FlashHash)
-              object
-            else
-              object.each { |k,v| object[k] = _marshal(v) }
-            end
+            object.each { |k,v| object[k] = _marshal(v) }
           end
 
           def _unmarshal(object)
