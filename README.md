@@ -1,5 +1,3 @@
-[![Build Status](https://secure.travis-ci.org/jodosha/redis-store.png?branch=master)](http://travis-ci.org/jodosha/redis-store?branch=master) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/jodosha/redis-store)
-
 # Redis stores for Ruby frameworks
 
 __Redis Store__ provides a full set of stores (*Cache*, *I18n*, *Session*, *HTTP Cache*) for modern Ruby frameworks like: __Ruby on Rails__, __Sinatra__, __Rack__, __Rack::Cache__ and __I18n__. It supports object marshalling, timeouts, single or multiple nodes, and namespaces.
