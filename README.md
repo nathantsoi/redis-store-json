@@ -1,11 +1,11 @@
 # Rails 4 Redis session store with JSON serialization
 
-Require store and actionpack
+Require store, actionpack and rack
 
 ```
-gem 'redis-actionpack-json', '~> 4.0.0'
-gem 'redis-rack', '~> 1.5.2'
-gem 'redis-store', '~> 3.0.0'
+gem 'redis-actionpack-json', github: 'nathantsoi/redis-store-json'
+gem 'redis-store-json', github: 'nathantsoi/redis-store-json'
+gem 'redis-rack-json', github: 'nathantsoi/redis-store-json'
 ```
 
 Configure the session
