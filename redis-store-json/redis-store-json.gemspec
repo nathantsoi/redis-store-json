@@ -11,8 +11,6 @@ Gem::Specification.new do |s|
   s.summary     = "Rails 4 Redis session store for ActionPack with JSON serialization"
   s.description = "Rails 4 Redis session store for ActionPack with JSON serialization"
 
-  s.rubyforge_project = 'redis-store-json'
-
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
